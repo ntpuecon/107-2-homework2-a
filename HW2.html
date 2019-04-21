@@ -96,6 +96,9 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
@@ -103,14 +106,74 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
 });
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
 </script>
 
 <!-- code folding -->
-
 
 
 
@@ -139,18 +202,21 @@ $(document).ready(function () {
 <div class="section level1">
 <h1>1 實證應用</h1>
 <p>Execute the following code lines to import fertil2 data frame.</p>
-<pre class="r"><code>library(readr)</code></pre>
-<pre><code>## Warning: package 'readr' was built under R version 3.5.3</code></pre>
-<pre class="r"><code>fertil2 &lt;- read_csv(&quot;https://raw.githubusercontent.com/tpemartin/github-data/master/fertil2.csv&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_double()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre class="r"><code>library(readr)
+fertil2 &lt;- read_csv(&quot;https://raw.githubusercontent.com/tpemartin/github-data/master/fertil2.csv&quot;)</code></pre>
 <p>The data includes, for women in Botswana during 1988, information on number of children, years of education, age, and religious and economic status variables.</p>
 <div id="section" class="section level2">
 <h2>1.1</h2>
 <p>Estimate the model: <span class="math display">\[children=\beta_{0}+\beta_{1}educ+\beta_{2}age+\beta_{3}age^{2}+u\]</span> by OLS, and interpret the estimates.</p>
+<pre class="r"><code>lm(children ~ educ+age+agesq, data = fertil2) -&gt; model1
+tidy(model1)</code></pre>
+<pre><code>## # A tibble: 4 x 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept) -4.14     0.241       -17.2  3.33e-64
+## 2 educ        -0.0906   0.00592     -15.3  1.68e-51
+## 3 age          0.332    0.0165       20.1  6.52e-86
+## 4 agesq       -0.00263  0.000273     -9.65 8.03e-22</code></pre>
 </div>
 <div id="section-1" class="section level2">
 <h2>1.2</h2>
@@ -198,6 +264,9 @@ $(document).ready(function () {
 <h2>2.1 立足點情境A.1</h2>
 <p>【A.1】P與立足點中的兩部份，<span class="math inline">\(\tilde{\epsilon}\)</span>及<span class="math inline">\(rincome\)</span>，皆無關。</p>
 <p>說明此時<span class="math inline">\(E(Y|P)\)</span>中P的係數即為<span class="math inline">\(\beta^*\)</span>.</p>
+<p>Ans.</p>
+<p>一開始的效應模型： <span class="math display">\[Y=Y_{-p}+\beta^* P\]</span></p>
+<p>給定<span class="math inline">\(P\)</span>條件下的迴歸模型： <span class="math display">\[E(Y|P) = E(Y_{-p}|P) + E(\beta^* P|P)\]</span> <span class="math display">\[= E(Y_{-p}|P) + \beta^* P ...1式\]</span> 因為<span class="math inline">\(P\)</span>與<span class="math inline">\(rincome\)</span>可以解釋的需求量部分（<span class="math inline">\(E(Y_{-p}|rincome)\)</span>）和<span class="math inline">\(rincome\)</span>不可以解釋的需求量部分（<span class="math inline">\(\tilde{\epsilon}\)</span>）皆無關，所以<span class="math inline">\(P\)</span>與<span class="math inline">\(Y_{-p}\)</span>無關，則 <span class="math display">\[1式 = E(Y_{-p}) + \beta^* P\]</span> <span class="math inline">\(P\)</span>的係數即為<span class="math inline">\(\beta^*\)</span>。</p>
 </div>
 <div id="a.2" class="section level2">
 <h2>2.2 立足點情境A.2</h2>
@@ -206,6 +275,12 @@ $(document).ready(function () {
 <p>【A.2.2】 P與<span class="math inline">\(rincome\)</span>有關——令<span class="math inline">\(E(rincome|P)=0.5+P\)</span>。</p>
 <p>即P與<span class="math inline">\(Y_{-p}\)</span>有關連，但此關連性來自於【A.2.2】中P與rincome的關連——即<span class="math inline">\(E(rincome|P)\)</span>部份。</p>
 <p>說明此時<span class="math inline">\(E(Y|P)\)</span>中P的係數「不」為<span class="math inline">\(\beta^*\)</span>，但<span class="math inline">\(E(Y|P,rincome)\)</span>中P的係數為<span class="math inline">\(\beta^*\)</span>。</p>
+<p>Ans.</p>
+<p>對<span class="math inline">\(Y_{-p}\)</span>進行<span class="math inline">\(rincome\)</span>條件下的訊息拆解所得到之效應模型： <span class="math display">\[Y = E(Y_{-p}|rincome) + \beta^* P + \tilde{\epsilon}\]</span></p>
+<p>給定<span class="math inline">\(P\)</span>條件下的迴歸模型：</p>
+<p><span class="math display">\[E(Y|P) = E( E(Y_{-p}|rincome)|P ) + E(\beta^* P|P) + E(\tilde{\epsilon}|P)\]</span> <span class="math display">\[= E(2+3 rincome|P) + \beta^* P\]</span> <span class="math display">\[= 2+3 E(rincome|P) + \beta^* P\]</span> <span class="math display">\[= 2 + 3 (0.5+P) + \beta^* P\]</span> <span class="math display">\[= 3.5 + (3+\beta^*) P\]</span> 此時<span class="math inline">\(P\)</span>的係數「不」為<span class="math inline">\(\beta^*\)</span>，為<span class="math inline">\((3 + \beta^*)\)</span>。</p>
+<p>給定<span class="math inline">\(P\)</span>與<span class="math inline">\(rincome\)</span>條件下的迴歸模型： <span class="math display">\[E(Y|P,rincome) = E( E(Y_{-p}|rincome)|P,rincome ) + E(\beta^* P|P,rincome) + E(\tilde{\epsilon}|P,rincome)\]</span> <span class="math display">\[= E(Y_{-p}|rincome) + \beta^* P\]</span> <span class="math display">\[= 2 + 3 rincome + \beta^*P\]</span> 此時<span class="math inline">\(P\)</span>的係數為<span class="math inline">\(\beta^*\)</span>。</p>
+<p>其中<span class="math inline">\(P\)</span>和<span class="math inline">\(rincome\)</span>皆與<span class="math inline">\(\tilde{\epsilon}\)</span>無關，所以 <span class="math display">\[E(\tilde{\epsilon}|P,rincome) = E(\tilde{\epsilon}|rincome) = E(\tilde{\epsilon})\]</span> <span class="math display">\[= E( Y_{-p} - E(Y_{-p}|rincome) )\]</span> <span class="math display">\[= E(Y_{-p}) - E(Y_{-p}) = 0\]</span></p>
 </div>
 <div id="a.3" class="section level2">
 <h2>2.3 立足點情境A.3</h2>
@@ -214,6 +289,10 @@ $(document).ready(function () {
 <p>【A.3.2】 P與<span class="math inline">\(rincome\)</span>有關——令<span class="math inline">\(E(rincome|P)=0.5+P\)</span>。</p>
 <p>即P與<span class="math inline">\(Y_{-p}\)</span>有關連：此關連性可來自於【A.2.2】中P與rincome的關連，也可來自於它與「非價格、非所得」引起的銷量之關連（即與<span class="math inline">\(\tilde{\epsilon}\)</span>相關部份）</p>
 <p>若<span class="math inline">\(E(\tilde{\epsilon}|P)=0.5+2P\)</span>，說明不論使用<span class="math inline">\(E(Y|P)\)</span>或<span class="math inline">\(E(Y|P,rincome)\)</span>，其P之係數都不會是<span class="math inline">\(\beta^*\)</span></p>
+<p>Ans.</p>
+<p>給定<span class="math inline">\(P\)</span>條件下的迴歸模型：</p>
+<p><span class="math display">\[E(Y|P) = E( E(Y_{-p}|rincome)|P ) + E(\beta^* P|P) + E(\tilde{\epsilon}|P)\]</span> <span class="math display">\[=  E(2+3 rincome|P) + \beta^* P + (0.5 + 2P)\]</span> <span class="math display">\[= 2+3 (0.5+P) + \beta^* P + (0.5 + 2P)\]</span> <span class="math display">\[= 4 + (5+\beta^*)P\]</span> 此時<span class="math inline">\(P\)</span>的係數「不」為<span class="math inline">\(\beta^*\)</span>，為<span class="math inline">\((5 + \beta^*)\)</span>。</p>
+<p>給定<span class="math inline">\(P\)</span>與<span class="math inline">\(rincome\)</span>條件下的迴歸模型： <span class="math display">\[E(Y|P,rincome) = E( E(Y_{-p}|rincome)|P,rincome ) + E(\beta^* P|P,rincome) + E(\tilde{\epsilon}|P,rincome)\]</span> <span class="math display">\[= E(Y_{-p}|rincome) + \beta^* P + E(\tilde{\epsilon}|P)\]</span> <span class="math display">\[= (2+3 rincome) + \beta^* P + (0.5+2 P)\]</span> <span class="math display">\[= 2.5 + 3 rincome + (2+\beta^*) P \]</span> 此時<span class="math inline">\(P\)</span>的係數「不」為<span class="math inline">\(\beta^*\)</span>，為<span class="math inline">\((2 + \beta^*)\)</span>。</p>
 </div>
 <div id="a.3b.1tsls" class="section level2">
 <h2>2.4 立足點情境A.3+效應情境B.1：TSLS</h2>
@@ -223,6 +302,9 @@ $(document).ready(function () {
 <p>【B.1】<span class="math inline">\(P_z\)</span>與<span class="math inline">\(\tilde{\epsilon}\)</span>無關</p>
 <p>即P與<span class="math inline">\(Y_{-p}\)</span>有關連：此關連性可來自於【A.2.2】中P與rincome的關連，也可來自於它與「非價格、非所得」引起的銷量之關連（即與<span class="math inline">\(\tilde{\epsilon}\)</span>相關部份）——以上是【A.3.1-3.2】的結果；但我們找到工具變數z，可產生【B.1】情境。</p>
 <p>若<span class="math inline">\(E(\tilde{\epsilon}|P)=0.5+2P\)</span>，說明使用<span class="math inline">\(E(Y|P_z,rincome)\)</span>其中<span class="math inline">\(P_z\)</span>的係數會是<span class="math inline">\(\beta^*\)</span></p>
+<p>Ans.</p>
+<p>對<span class="math inline">\(Y_{-p}\)</span>與<span class="math inline">\(P\)</span>進行訊息拆解與對所得到之效應模型： <span class="math display">\[Y = E(Y_{-p}|rincome) + \tilde{\epsilon} + \beta^* P_{z} + \beta^* \tilde{v}\]</span></p>
+<p>給定<span class="math inline">\(P_{z}\)</span>與<span class="math inline">\(rincome\)</span>條件下的迴歸模型： <span class="math display">\[E(Y|P_{z},rincome) = E( E(Y_{-p}|rincome)|P_{z},rincome ) + E(\tilde{\epsilon}|P_{z},rincome) + E(\beta^* P_{z}|P_{z},rincome) + E(\beta^* \tilde{v}|P_{z},rincome)\]</span> <span class="math display">\[= E(Y_{-p}|rincome) + E(\tilde{\epsilon}) + \beta^* P_{z} + \beta^* E(\tilde{v}|rincome)\]</span> <span class="math display">\[= 2 + 3 rincome + \beta^* P_{z} + \beta^*f(rincome)\]</span> 此時<span class="math inline">\(P_{z}\)</span>的係數為<span class="math inline">\(\beta^*\)</span>。</p>
 </div>
 <div id="a.3b.1" class="section level2">
 <h2>2.5 立足點情境A.3+效應情境B.1：複迴歸</h2>
@@ -231,6 +313,9 @@ $(document).ready(function () {
 <p>【A.3.2】 P與<span class="math inline">\(rincome\)</span>有關——令<span class="math inline">\(E(rincome|P)=0.5+P\)</span>。</p>
 <p>【B.1】<span class="math inline">\(P_z\)</span>與<span class="math inline">\(\tilde{\epsilon}\)</span>無關</p>
 <p>說明使用<span class="math inline">\(E(Y|P,rincome,z)\)</span>其中<span class="math inline">\(P\)</span>的係 數不會是<span class="math inline">\(\beta^*\)</span>.</p>
+<p>Ans.</p>
+<p>對<span class="math inline">\(Y_{-p}\)</span>進行<span class="math inline">\(rincome\)</span>條件下的訊息拆解所得到之效應模型： <span class="math display">\[Y = E(Y_{-p}|rincome)  + \tilde{\epsilon} + \beta^* P\]</span></p>
+<p>給定<span class="math inline">\(P\)</span>、<span class="math inline">\(rincome\)</span>和<span class="math inline">\(z\)</span>條件下的迴歸模型： <span class="math display">\[E(Y|P,rincome,z) = E( E(Y_{-p}|rincome)|P,rincome,z ) + E(\tilde{\epsilon}|P,rincome,z) + E(\beta^* P|P,rincome,z)\]</span> <span class="math display">\[= E(Y_{-p}|rincome) + E(\tilde{\epsilon}|P) + \beta^* P\]</span> <span class="math display">\[= 2+3 rincome + (0.5+2P) + \beta^* P\]</span> <span class="math display">\[= 2.5 + 3 rincome + (2+\beta^*) P\]</span> 此時<span class="math inline">\(P\)</span>的係數「不」為<span class="math inline">\(\beta^*\)</span>，為<span class="math inline">\((2 + \beta^*)\)</span>。</p>
 </div>
 </div>
 <div class="section level1">
