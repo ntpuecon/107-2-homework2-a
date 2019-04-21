@@ -218,8 +218,8 @@ $E(Y|P)=0.5+2P+2+3(0.5+P)+\beta*P=4+(5+\beta^*)P$
 
 $Y=\tilde{\epsilon}+2+3rincome+\beta^*P=2.5+(2+\beta^*)P+3rincome$
 $E(Y|P,rincome)=2.5+(2+\beta^*)P+3rincome$
-這個的情況是，$\tilde{\epsilon}$不管怎樣都會跟P有關，
 $E(Y|P)=0.5+2P+2+3(0.5+P)+\beta^*P =4+(5+\beta^*)P$
+這個的情況是，$\tilde{\epsilon}$不管怎樣都會跟P有關，即使我們多控制了rincome也一樣，所以立足點一定不相等，由此可知，不管抽出多少控制變數都會不獨立。
 
 ## 2.4 立足點情境A.3+效應情境B.1：TSLS
 
@@ -238,6 +238,7 @@ $E(Y|P)=0.5+2P+2+3(0.5+P)+\beta^*P =4+(5+\beta^*)P$
 ANS
 $Y=\tilde{\epsilon}+2+3rincome+(\tilde{v}+P_z)\beta^*$
 $E(Y|P_z,rincome)=(\tilde{\epsilon}+2+\beta^*\tilde{v})+3rincome+P_z\beta^*$
+我們利用工具變數$P_z$把P給訊息拆解，將跟$P_z$有關的給當解釋變數，而$\tilde{v}$丟到殘差值那裏，可以知道最初的殘差值已經跟$P_z$無關，而且$\tilde{v}$原本就跟$P_z$無關，所以整個殘差值原本就跟$P_z$無關，表示其立足點相同，自然$P_z$係數就會為\beta^*
 
 
 ## 2.5 立足點情境A.3+效應情境B.1：複迴歸
