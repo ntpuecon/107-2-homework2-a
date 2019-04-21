@@ -255,7 +255,8 @@ $E(Y|P_z,rincome)=(\tilde{\epsilon}+2+\beta^*\tilde{v})+3rincome+P_z\beta^*$
 數不會是$\beta^*$.
 
 ANS
-$Y=Y_{P,rincome,z}+\beta^*P+\beta_0rincome$
+$E(Y|P_z,rincome)=(\tilde{\epsilon}+2+\beta^*\tilde{v})+3rincome+P_z\beta^*$
+$
 
 
 # 3. 替代變數
