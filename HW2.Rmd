@@ -218,7 +218,7 @@ $E(Y|P)=0.5+2P+2+3(0.5+P)+\beta*P=4+(5+\beta^*)P$
 
 $Y=\tilde{\epsilon}+2+3rincome+\beta^*P=2.5+(2+\beta^*)P+3rincome$
 $E(Y|P,rincome)=2.5+(2+\beta^*)P+3rincome$
-這個的情況是
+這個的情況是，$\tilde{\epsilon}$不管怎樣都會跟P有關，
 $E(Y|P)=0.5+2P+2+3(0.5+P)+\beta^*P =4+(5+\beta^*)P$
 
 ## 2.4 立足點情境A.3+效應情境B.1：TSLS
