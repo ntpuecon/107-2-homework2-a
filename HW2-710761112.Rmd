@@ -62,7 +62,7 @@ summary(OLSHW11)
 #經濟解釋
 #1.由結果可知當媽媽教育年限越高，生出來的小孩越少，教育年限多一年，會少0.0905個小孩
 #2.當媽媽每增加一歲，小孩會增加0.33個
-#3.媽媽每增加年紀一歲的平方會減少0.002個
+#3.隨著媽媽的年齡越來越大，小孩個數減少幅度會越來越大
 
 ```
 
@@ -90,7 +90,8 @@ Estimate the model from part 1.1 by using frsthalf as an IV for educ. Compare th
 TSLSHW13<-ivreg(children~educ+age+agesq|age+agesq+frsthalf,data=fertil2)
 
 summary(TSLSHW13)
-#加了工具變數以後和1.1那題相比，educ前的係數由-0.09到-0.17，效果增強
+#加了工具變數以後和1.1那題相比，educ前的係數由-0.09到-0.17，會有正向偏誤，實際的educ的效應值應該越大
+
 
 ```
 
@@ -104,7 +105,8 @@ lm(children~educ+age+agesq+electric+tv+ bicycle,data=fertil2)->OLSHW14
 ivreg(children~educ+age+agesq+electric+tv+bicycle|age+agesq+electric+tv+ bicycle+frsthalf,data=fertil2)->TSLSHW14
 summary(TSLSHW14)
 #增加三個控制變數，以及加了控制變數frsthalf，educ的係數從-0.07變-0.16
-#電視的關聯是負效果的原因:有可能有輻射，對爸爸媽媽的生育能力有負面的影響
+#電視的關聯是負效果的原因:1.有可能有輻射，對爸爸媽媽的生育能力有負面的影響
+                      #2.因為看電視以後，對社會失望，對未來的世界擔憂，所以不想要生小孩
 
 ```
 
@@ -175,8 +177,8 @@ $$Y=Y_{-p}+\beta^* P$$
 
 ANS
 ${\epsilon}+2+3 rincome+\beta^* P=Y$
-$E(Y|P)=beta^* P+2+3 rincome$
-目前我們可以知道，${\epsilon}$及rincome，皆和P無關，表示$Y_{-p}$跟P無關，表示立足點相等，所以其P的係數即為$beta^*$
+$E(Y|P)=\beta^* P+2+3 rincome$
+目前我們可以知道，${\epsilon}$及rincome，皆和P無關，表示$Y_{-p}$跟P無關，表示立足點相等，所以其P的係數即為$\beta^*$
 
 
 ## 2.2 立足點情境A.2
@@ -285,11 +287,11 @@ ANS
 $$\tilde{x}_i=x_i+\epsilon_i.$$
 請問效應解釋變數使用替代變數下，$\tilde{x}_i$的OLS估計式還有一致性嗎？（驗證$E(y_i|\tilde{x}_i,w_i)$中$\tilde{x_i}$的係數是否為$\beta^*$）要有一致性會需要什麼額外條件嗎？
 ANS
-$y_i＝\beta^*(\tilde{x}_i-\epsilon_i)+\gamma w_i+y_{-x,-w,i}$
-$E(y_i|\tilde{x}_i,w_i)=\beta^*(x_i|\tilde{x}_i,w_i)-\beta^*(\epsilon_i|\tilde{x}_i,w_i)+\gamma E(W_i|\tilde{x}_i,w_i)+E(y_{-x,-w,i}|\tilde{x},w_i)$
-$E(y_i|\tilde{x}_i,w_i)=\beta^*\tilde{x}+\gamma w_i+E(y_{-x,-w,i}|\tilde{x},w_i)-E(y_{-x,-w,i}|\tilde{x},w_i)$
-不一定有一致性，因為後面兩項$E(y_{-x,-w,i}|\tilde{x},w_i)-E(y_{-x,-w,i}|\tilde{x},w_i)$有可能不等於零表示說$\tilde{x}_i$和$w_i$和$E(y_{-x,-w,i}|\tilde{x},w_i)-E(y_{-x,-w,i}|\tilde{x},w_i)$不獨立，立足點不同，會有選擇性偏誤。
-額外條件部分需要滿足$E(y_{-x,-w,i}|\tilde{x},w_i)-E(y_{-x,-w,i}|\tilde{x},w_i)＝0$
+$$y_i＝\beta^*(\tilde{x}_i-\epsilon_i)+\gamma w_i+y_{-x,-w,i}$$
+$$E(y_i|\tilde{x}_i,w_i)=\beta^*E(\tilde{x}_i|\tilde{x}_i,w_i)-\beta^*E(\epsilon_i|\tilde{x}_i,w_i)+\gamma E(W_i|\tilde{x}_i,w_i)+E(y_{-x,-w,i}|\tilde{x},w_i)$$
+$$E(y_i|\tilde{x}_i,w_i)=\beta^*\tilde{x}+\gamma w_i+E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)$$
+不一定有一致性，因為後面兩項$E(y_{-x,-w,i}|\tilde{x},w_i)-E(y_{-x,-w,i}|\tilde{x},w_i)$有可能不等於零表示說$\tilde{x}_i$和$w_i$和$E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)$不獨立，立足點不同，會有選擇性偏誤。
+額外條件部分需要滿足$$E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)＝0$$
 
 ## 3.2
 
@@ -297,11 +299,11 @@ $E(y_i|\tilde{x}_i,w_i)=\beta^*\tilde{x}+\gamma w_i+E(y_{-x,-w,i}|\tilde{x},w_i)
 $$\tilde{w}_i=w_i+\epsilon_i.$$
 請問控制變數使用替代變數下，$x_i$的OLS估計式還有一致性嗎？（驗證$E(y_i|x_i,\tilde{w}_i)$中$x_i$的係數是否為$\beta^*$）要有一致性會需要什麼額外條件嗎？
 
-$\tilde{w}=w_i+\epsilon_i$
-$y_i=\beta^*(x)+\gamma(\tilde{w}-\epsilon_i)+y_{-x,-w,i}$
-$E(y_i|x,\tilde{w_i})=\beta^*E(x_i|x_i,\tilde{w_i})+{\gamma}E(\tilde{w_i}|x_i,\tilde{w_i})+{\gamma}E(\tilde{\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$
-$=\beta^*x_i+\gamma\tilde{w_i}+{\gamma}E(\tilde{\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$
-要確認$E(\epsilon_i|x_i,\tilde{w_i})=0$，表示$\epsilon_i$和$x_i$獨立，則立足點相同，$x_i$係數為$\beta^*$。
+$$\tilde{w}=w_i+\epsilon_i$$
+$$y_i=\beta^*(x)+\gamma(\tilde{w}-\epsilon_i)+y_{-x,-w,i}$$
+$$E(y_i|x,\tilde{w_i})=\beta^*E(x_i|x_i,\tilde{w_i})+{\gamma}E(\tilde{w_i}|x_i,\tilde{w_i})-{\gamma}E(\tilde{\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$$
+$$=\beta^*x_i+\gamma\tilde{w_i}-{\gamma}E(\tilde{\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$$
+要確認$$E(\epsilon_i|x_i,\tilde{w_i})=0$$，表示$\epsilon_i$和$x_i$獨立，則立足點相同，$x_i$係數為$\beta^*$。
 
 
 
