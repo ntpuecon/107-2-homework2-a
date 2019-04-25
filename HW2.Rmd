@@ -58,6 +58,7 @@ Estimate the model:
 $$children=\beta_{0}+\beta_{1}educ+\beta_{2}age+\beta_{3}age^{2}+u$$
 by OLS, and interpret the estimates.
 
+
 ```{r, include=FALSE}
 
 library(dplyr)
@@ -65,35 +66,136 @@ library(broom)
 
 ```
 
-```{r}
+```{r ans11}
 
 lm(children ~ educ+age+agesq, data = fertil2) -> model1
 tidy(model1)
 
 ```
 
+經濟解釋：<p>
+
+<ul>
+  <li>假設其他情況不變，媽媽的$educ$增加1年，估計會使$children$平均減少0.09個。</li>
+  <li>假設其他情況不變，媽媽的$age$增加一歲，估計會使$children$平均增加0.33個。</li>
+  <li>假設其他情況不變，隨著媽媽的$age$增加，會使$children$平均的增加量愈來愈小（有邊際遞減的趨勢）。</li>
+</ul>
+
 
 ## 1.2
 The variable frsthalf is a dummy variable equal to one if the woman was born during the first six months of the year. Assuming that frsthalf is uncorrelated with the error term from 1.1, show that frsthalf is a reasonable IV candidate for educ. (Hint: you need to do a regression.)
 
+
+```{r ans12}
+
+lm(educ~frsthalf, data=fertil2) -> model2
+tidy(model2)
+
+```
+
+$frsthalf$為$educ$的一個合格的工具變數，因為<br>
+
+<ol>
+  <li>$frsthalf$對$educ$有訊息價值（滿足相關性條件）。</li>
+  <li>$frsthalf$與誤差項無關（滿足排除條件）。</li>
+</ol>
+
+
 ## 1.3
 Estimate the model from part 1.1 by using frsthalf as an IV for educ. Compare the estimated effect of education with the OLS estiimate from 1.1.
+
+
+```{r, include=FALSE}
+
+library(AER)
+
+```
+
+```{r ans13}
+
+ivreg(children~educ+age+agesq | age+agesq+frsthalf, data=fertil2) -> TSLSmodel1
+tidy(TSLSmodel1)
+
+```
+利用$frsthalf$當$educ$的工具變數作TSLS，和1.1題的OLS模型相比，$educ$的係數由-0.09降到-0.17，代表用OLS估計的係數有正向偏誤，實際$educ$的效應值應該更大。
+
 
 ## 1.4
 Add the binary variables electric, tv, and bicycle to the model and assume that these are exogenous. Estimate the equation by OLS and TSLS and compare the estimated coefficients on educ. Interpret the coefficient on tv and explain why television ownership has a negative effect on fertility.
 
+
+```{r, include=FALSE}
+
+library(stargazer)
+
+```
+
+```{r ans14, results='asis'}
+
+lm(children~educ+age+agesq+electric+tv+bicycle, data=fertil2) -> model3
+
+
+ivreg(children~educ+age+agesq+electric+tv+bicycle | age+agesq+electric+tv+bicycle+frsthalf, data=fertil2) -> TSLSmodel3
+
+stargazer(model3, TSLSmodel3,
+          title = "OLS與TSLS model",
+          type = "html",
+          align=T          
+          )
+
+
+
+```
+
+<p>
+<ol>
+  <li>$educ$的係數由-0.077降到-0.164，代表用OLS估計的係數有正向偏誤，實際$educ$的效應值應該更大。</li>
+  <li>假設其他情況不變，在OLS模型下，當$tv$為1，估計會使$children$平均減少0.25個；在TSLS模型下，當$tv$為1，估計會使$children$平均減少0.003個。有沒有電視和小孩有幾個，在數據上顯示兩者具負相關性，但兩者應該不具因果關係。</li>
+</ol>
+
+
 ## 1.5 
 Continue from 1.4, conduct Hausman test to see if OLS is valid for the study under a 5 percent test size.
+
+```{r ans15}
+
+summary(TSLSmodel3, vcov = sandwich, diagnostics = TRUE, df=Inf)
+
+```
+在給定5%的顯著水準下，檢定的結果是不顯著的，表示可以用OLS來作檢定就好。
+
 
 ## 1.6
 Can we test whether frsthalf is indeed exogenous for being an IV? why or why not?
 
+不行<br>
+因為這裡的工具變數個數等於解釋變數個數，所以表示卡方分配的自由度為0，無法作檢定。
+
 ## 1.7
 If we add one more IV catholic, can we test IV exogeneity? If yes, what is the test result under a 5 percent test size.
+
+
+```{r ans17}
+
+ivreg(children~educ+age+agesq+electric+tv+bicycle | age+agesq+electric+tv+bicycle+frsthalf+catholic, data=fertil2) -> TSLSmodel4
+summary(TSLSmodel4, vcov = sandwich, diagnostics = TRUE, df=Inf)
+
+```
+可以<br>
+因為這裡的工具變數個數大於解釋變數個數，自由度不會等於0，可以作檢定。<br>
+在給定5%的顯著水準下作Sargan test，檢定結果顯示為不顯著，表示無足夠的證據顯示工具變數滿足排除條件。
+
+
 
 ## 1.8
 Are frsthalf and catholic weak IVs?
 
+```{r ans18}
+
+summary(TSLSmodel4, vcov = sandwich, diagnostics = TRUE, df=Inf)
+
+```
+在給定5%的顯著水準下作工具變數關聯性檢定，檢定結果為顯著的，表示有足夠證據顯示工具變數與$educ$具強關聯性。
 
 
 # 2 複迴歸與工具變數
@@ -281,10 +383,34 @@ $$y_i=\beta^* x_i+\gamma w_i+y_{-x,-w,i}$$
 $$\tilde{x}_i=x_i+\epsilon_i.$$
 請問效應解釋變數使用替代變數下，$\tilde{x}_i$的OLS估計式還有一致性嗎？（驗證$E(y_i|\tilde{x}_i,w_i)$中$\tilde{x_i}$的係數是否為$\beta^*$）要有一致性會需要什麼額外條件嗎？
 
+
+Ans.
+
+$$y_i＝\beta^*(\tilde{x}_i-\epsilon_i)+\gamma w_i+y_{-x,-w,i}$$
+$$E(y_i|\tilde{x}_i,w_i)=\beta^*E(\tilde{x}_i|\tilde{x}_i,w_i)-\beta^*E(\epsilon_i|\tilde{x}_i,w_i)+\gamma E(W_i|\tilde{x}_i,w_i)+E(y_{-x,-w,i}|\tilde{x},w_i)$$
+$$E(y_i|\tilde{x}_i,w_i)=\beta^*\tilde{x}+\gamma w_i+E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)$$
+不一定有一致性，因為後面兩項$E(y_{-x,-w,i}|\tilde{x},w_i)-E(y_{-x,-w,i}|\tilde{x},w_i)$有可能不等於零表示說$\tilde{x}_i$和$w_i$和$E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)$不獨立，立足點不同，會有選擇性偏誤。
+額外條件部分需要滿足$$E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)＝0$$
+
+
+
+
 ## 3.2
 
 若我們沒有真正的$w_i$資料而改成使用它的替代變數$\tilde{w}_i$進行複迴歸，且令
 $$\tilde{w}_i=w_i+\epsilon_i.$$
 請問控制變數使用替代變數下，$x_i$的OLS估計式還有一致性嗎？（驗證$E(y_i|x_i,\tilde{w}_i)$中$x_i$的係數是否為$\beta^*$）要有一致性會需要什麼額外條件嗎？
+
+
+Ans.
+
+$$\tilde{w}=w_i+\epsilon_i$$
+$$y_i=\beta^*(x)+\gamma(\tilde{w}-\epsilon_i)+y_{-x,-w,i}$$
+$$E(y_i|x,\tilde{w_i})=\beta^*E(x_i|x_i,\tilde{w_i})+{\gamma}E(\tilde{w_i}|x_i,\tilde{w_i})-{\gamma}E(\tilde{\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$$
+$$=\beta^*x_i+\gamma\tilde{w_i}-{\gamma}E(\tilde{\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$$
+要確認$$E(\epsilon_i|x_i,\tilde{w_i})=0$$，表示$\epsilon_i$和$x_i$獨立，則立足點相同，$x_i$係數為$\beta^*$。
+
+
+
 
 
