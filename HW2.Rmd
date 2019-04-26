@@ -56,7 +56,7 @@ The data includes, for women in Botswana during 1988, information on number of c
 ## 1.1
 Estimate the model:
 $$children=\beta_{0}+\beta_{1}educ+\beta_{2}age+\beta_{3}age^{2}+u$$
-by OLS, and interpret the estimates.
+by OLS, and interpret the estimates.h
 
 
 ```{r, include=FALSE}
@@ -81,7 +81,7 @@ tidy(model1)
   <li>假設其他情況不變，隨著媽媽的$age$增加，會使$children$平均的增加量愈來愈小（有邊際遞減的趨勢）。</li>
 </ul>
 
-
+rtrtrtrtrt
 ## 1.2
 The variable frsthalf is a dummy variable equal to one if the woman was born during the first six months of the year. Assuming that frsthalf is uncorrelated with the error term from 1.1, show that frsthalf is a reasonable IV candidate for educ. (Hint: you need to do a regression.)
 
