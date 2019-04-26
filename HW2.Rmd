@@ -10,7 +10,7 @@ output:
 params:
   name: ["王正評","張郁瑋","郭品辰","謝芮文"]
   id: [710761105,710761108,710761112,710761120]
-  group: "team1"
+  group: "teamA"
   url: ""
 ---
 請依狀況更改上面的name,id及group（分別代表組員姓名，學號及組號），但請勿更改下面三行的設定。  
@@ -303,16 +303,17 @@ $$E(Y|P) = E( E(Y_{-p}|rincome)|P ) + E(\beta^* P|P) + E(\tilde{\epsilon}|P)$$
 $$=  E(2+3 rincome|P) + \beta^* P + (0.5 + 2P)$$
 $$= 2+3 (0.5+P) + \beta^* P + (0.5 + 2P)$$
 $$= 4 + (5+\beta^*)P$$
-此時$P$的係數「不」為$\beta^*$，為$(5 + \beta^*)$。
+此時$P$的係數「不」為$\beta^*$，為$(5 + \beta^*)$。若迴歸模型未加入$rincome$這項解釋變數，會產生選擇性偏誤，使$P$的估計係數涵蓋了立足點的差異，造成估計結果的不正確；且$P$又與$\tilde{\epsilon}$有關，所以$P$的估計係數一定不會是真實的效應值。
 
 
-
+<br>
 給定$P$與$rincome$條件下的迴歸模型：
 $$E(Y|P,rincome) = E( E(Y_{-p}|rincome)|P,rincome ) + E(\beta^* P|P,rincome) + E(\tilde{\epsilon}|P,rincome)$$
 $$= E(Y_{-p}|rincome) + \beta^* P + E(\tilde{\epsilon}|P)$$
 $$= (2+3 rincome) + \beta^* P + (0.5+2 P)$$
 $$= 2.5 + 3 rincome + (2+\beta^*) P $$
-此時$P$的係數「不」為$\beta^*$，為$(2 + \beta^*)$。
+此時$P$的係數「不」為$\beta^*$，為$(2 + \beta^*)$。因為$P$與$\tilde{\epsilon}$有關，所以$P$的估計係數不會是真實的效應值。
+</br>
 
 
 ## 2.4 立足點情境A.3+效應情境B.1：TSLS
@@ -332,14 +333,16 @@ $$= 2.5 + 3 rincome + (2+\beta^*) P $$
 
 Ans.
 
-對$Y_{-p}$與$P$進行訊息拆解與對所得到之效應模型：
+對$Y_{-p}$與$P$進行訊息拆解所得到之效應模型：
 $$Y = E(Y_{-p}|rincome) + \tilde{\epsilon} + \beta^* P_{z} + \beta^* \tilde{v}$$
 
+<br>
 給定$P_{z}$與$rincome$條件下的迴歸模型：
 $$E(Y|P_{z},rincome) = E( E(Y_{-p}|rincome)|P_{z},rincome ) + E(\tilde{\epsilon}|P_{z},rincome) + E(\beta^* P_{z}|P_{z},rincome) + E(\beta^* \tilde{v}|P_{z},rincome)$$
 $$= E(Y_{-p}|rincome) + E(\tilde{\epsilon}) + \beta^* P_{z} + \beta^* E(\tilde{v}|rincome)$$
 $$= 2 + 3 rincome + \beta^* P_{z} + \beta^*f(rincome)$$
-此時$P_{z}$的係數為$\beta^*$。
+此時$P_{z}$的係數為$\beta^*$。加入工具變數對$P$做訊息拆解，因為$z$與$\tilde{\epsilon}$無關，自然$P_{z}$與$\tilde{\epsilon}$也會無關，所以用新資料$P_{z}$與$rincome$做複迴歸可以得到$P$的真實效應值。
+</br>
 
 
 ## 2.5 立足點情境A.3+效應情境B.1：複迴歸
@@ -361,12 +364,14 @@ Ans.
 對$Y_{-p}$進行$rincome$條件下的訊息拆解所得到之效應模型：
 $$Y = E(Y_{-p}|rincome)  + \tilde{\epsilon} + \beta^* P$$
 
+<br>
 給定$P$、$rincome$和$z$條件下的迴歸模型：
 $$E(Y|P,rincome,z) = E( E(Y_{-p}|rincome)|P,rincome,z ) + E(\tilde{\epsilon}|P,rincome,z) + E(\beta^* P|P,rincome,z)$$
 $$= E(Y_{-p}|rincome) + E(\tilde{\epsilon}|P) + \beta^* P$$ 
 $$= 2+3 rincome + (0.5+2P) + \beta^* P$$
 $$= 2.5 + 3 rincome + (2+\beta^*) P$$
-此時$P$的係數「不」為$\beta^*$，為$(2 + \beta^*)$。
+此時$P$的係數「不」為$\beta^*$，為$(2 + \beta^*)$。即使找到工具變數，但若沒有將$P$先對工具變數做第一階段的最小平方法得到$P_{z}$，而是直接用$P$做OLS，此時$P$仍與$\tilde{\epsilon}$有關，當然$P$的估計係數不會是真實的效應值。
+</br>
 
 
 
@@ -409,10 +414,16 @@ $$\tilde{w}_i=w_i+\epsilon_i.$$
 
 Ans.
 
-$$y_i=\beta^*(x)+\gamma(\tilde{w}-\epsilon_i)+y_{-x,-w,i}$$
-$$E(y_i|x,\tilde{w_i})=\beta^*E(x_i|x_i,\tilde{w_i})+{\gamma}E(\tilde{w_i}|x_i,\tilde{w_i})-{\gamma}E({\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$$
-$$=\beta^*x_i+\gamma\tilde{w_i}-{\gamma}E({\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$$
-要確認$$E(\epsilon_i|x_i,\tilde{w_i})=0$$，表示$\epsilon_i$和$x_i$獨立，則立足點相同，$x_i$係數為$\beta^*$。
+控制變數使用替代變數的效應模型：
+$$y_i = \beta^* x_i + \gamma \tilde{w_i} - \gamma \epsilon_{i} + y_{-x,-w,i}$$
+
+<br>
+給定$x_i$和$\tilde{w_i}$條件下的迴歸模型：
+$$E(y_i | x_i,\tilde{w_i}) = E(\beta^* x_i | x_i,\tilde{w_i}) + E(\gamma \tilde{w_i} | x_i,\tilde{w_i}) - E(\gamma \epsilon_{i} | x_i,\tilde{w_i}) + E(y_{-x,-w,i} | x_i,\tilde{w_i})$$
+$$= \beta^* x_i + \gamma \tilde{w_i} - \gamma E( \epsilon_{i} | x_i,\tilde{w_i}) + E(y_{-x,-w,i} | \tilde{w_i})$$
+</br>
+
+若$\epsilon_{i}$與$x_i$線性獨立，則$x_i$的估計係數仍為$\beta^*$。
 
 
 
