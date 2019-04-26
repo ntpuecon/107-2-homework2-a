@@ -392,9 +392,9 @@ $$\tilde{x}_i=x_i+\epsilon_i.$$
 Ans.
 
 $$y_i＝\beta^*(\tilde{x}_i-\epsilon_i)+\gamma w_i+y_{-x,-w,i}$$
-$$E(y_i|\tilde{x}_i,w_i)=\beta^*E(\tilde{x}_i|\tilde{x}_i,w_i)-\beta^*E(\epsilon_i|\tilde{x}_i,w_i)+\gamma E(W_i|\tilde{x}_i,w_i)+E(y_{-x,-w,i}|\tilde{x},w_i)$$
+$$E(y_i|\tilde{x}_i,w_i)=\beta^*E(\tilde{x}_i|\tilde{x}_i,w_i)-\beta^*E(\epsilon_i|\tilde{x}_i,w_i)+\gamma E(w_i|\tilde{x}_i,w_i)+E(y_{-x,-w,i}|\tilde{x},w_i)$$
 $$E(y_i|\tilde{x}_i,w_i)=\beta^*\tilde{x}+\gamma w_i+E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)$$
-不一定有一致性，因為後面兩項$E(y_{-x,-w,i}|\tilde{x},w_i)-E(y_{-x,-w,i}|\tilde{x},w_i)$有可能不等於零表示說$\tilde{x}_i$和$w_i$和$E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)$不獨立，立足點不同，會有選擇性偏誤。
+不一定有一致性，因為後面兩項$E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)$有可能不等於零表示說$\tilde{x}_i$和$w_i$和$E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)$不獨立，立足點不同，會有選擇性偏誤。
 額外條件部分需要滿足$$E(y_{-x,-w,i}|\tilde{x},w_i)-\beta^*E(\epsilon|\tilde{x},w_i)＝0$$
 
 
@@ -409,10 +409,9 @@ $$\tilde{w}_i=w_i+\epsilon_i.$$
 
 Ans.
 
-$$\tilde{w}=w_i+\epsilon_i$$
 $$y_i=\beta^*(x)+\gamma(\tilde{w}-\epsilon_i)+y_{-x,-w,i}$$
-$$E(y_i|x,\tilde{w_i})=\beta^*E(x_i|x_i,\tilde{w_i})+{\gamma}E(\tilde{w_i}|x_i,\tilde{w_i})-{\gamma}E(\tilde{\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$$
-$$=\beta^*x_i+\gamma\tilde{w_i}-{\gamma}E(\tilde{\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$$
+$$E(y_i|x,\tilde{w_i})=\beta^*E(x_i|x_i,\tilde{w_i})+{\gamma}E(\tilde{w_i}|x_i,\tilde{w_i})-{\gamma}E({\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$$
+$$=\beta^*x_i+\gamma\tilde{w_i}-{\gamma}E({\epsilon}|x_i,\tilde{w_i})+E(y_{-x,-w,i}|x_i,w_i)$$
 要確認$$E(\epsilon_i|x_i,\tilde{w_i})=0$$，表示$\epsilon_i$和$x_i$獨立，則立足點相同，$x_i$係數為$\beta^*$。
 
 
