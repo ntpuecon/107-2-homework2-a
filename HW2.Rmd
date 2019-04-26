@@ -255,6 +255,7 @@ Ans.
 $$Y = E(Y_{-p}|rincome) + \beta^* P + \tilde{\epsilon}$$
 
 
+<br>
 給定$P$條件下的迴歸模型：
 
 $$E(Y|P) = E( E(Y_{-p}|rincome)|P ) + E(\beta^* P|P) + E(\tilde{\epsilon}|P)$$
@@ -262,20 +263,24 @@ $$= E(2+3 rincome|P) + \beta^* P$$
 $$= 2+3 E(rincome|P) + \beta^* P$$
 $$= 2 + 3 (0.5+P) + \beta^* P$$
 $$= 3.5 + (3+\beta^*) P$$
-此時$P$的係數「不」為$\beta^*$，為$(3 + \beta^*)$。
+此時$P$的係數「不」為$\beta^*$，為$(3 + \beta^*)$。若迴歸模型未加入$rincome$這項解釋變數，會產生選擇性偏誤，使$P$的估計係數涵蓋了立足點的差異，造成估計結果的不正確。
+</br>
 
 
+<br>
 給定$P$與$rincome$條件下的迴歸模型：
 $$E(Y|P,rincome) = E( E(Y_{-p}|rincome)|P,rincome ) + E(\beta^* P|P,rincome) + E(\tilde{\epsilon}|P,rincome)$$
 $$= E(Y_{-p}|rincome) + \beta^* P$$
 $$= 2 + 3 rincome + \beta^*P$$
-此時$P$的係數為$\beta^*$。
+此時$P$的係數為$\beta^*$。若迴歸模型加入$rincome$這項解釋變數，在相同$rincome$水準的州，它們的立足點是相同的，所以此時$P$的估計係數會是真實的效應值。
+</br>
 
-其中$P$和$rincome$皆與$\tilde{\epsilon}$無關，所以
+<li>
+$P$和$rincome$皆與$\tilde{\epsilon}$無關，所以
 $$E(\tilde{\epsilon}|P,rincome) = E(\tilde{\epsilon}|rincome) = E(\tilde{\epsilon})$$
 $$= E( Y_{-p} - E(Y_{-p}|rincome) )$$
 $$= E(Y_{-p}) - E(Y_{-p}) = 0$$
-
+</li>
 
 ## 2.3 立足點情境A.3
 
